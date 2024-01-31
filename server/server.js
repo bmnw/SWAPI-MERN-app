@@ -1,28 +1,32 @@
 const express = require("express");
 const bodyParser = require("body-parser");
-const data = require("./data_access");
+const dao = require("./data_access.js");
 
 const app = express();
 
-app.use(bodyParser.json());
+app.use(express.json());
 
 // GET planets
-app.get("/planets/:id", function (req, res) {
-  // let planet = data.findPlanet(req.params.id);
+app.get("/planets", (req, res) => {
+  dao.findAllPlanets((err, planets) => {
+    if (planets) {
+      res.send(planets);
+    } else {
+      res.statusCode = 404;
+      res.end();
+    }
+  });
+});
 
-  let planet = {
-    id: 1,
-    name: "test planet",
-    climate: "desert",
-    temperate: "arid",
-  };
-
-  if (planet === undefined) {
-    res.statusCode = 404;
-    res.end();
-  } else {
-    res.send(planet);
-  }
+app.get("/characters", (req, res) => {
+  dao.findAllCharacters((err, characters) => {
+    if (characters) {
+      res.send(characters);
+    } else {
+      res.statusCode = 404;
+      res.end();
+    }
+  });
 });
 
 var port = 3000;
